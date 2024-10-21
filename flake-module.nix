@@ -32,7 +32,7 @@ in
             default = "";
           };
           pathsToCache = lib.mkOption {
-            type = lib.types.attrsOf lib.types.path;
+            type = lib.types.attrsOf (lib.types.attrsOf lib.types.path);
             description = ''
               Store paths to push to/pin in a Nix cache (such as cachix)
 
@@ -57,10 +57,9 @@ in
               runtimeInputs = [ package ];
               text = ''
                 set -x
-                cachix push ${cacheName} ${lib.concatStringsSep " " (lib.attrValues pathsToCache)}
-                ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: path: ''
-                  cachix pin ${cacheName} ${pinPrefix}${name}-${system} ${path}
-                '') pathsToCache)}
+                 ${lib.concatStringsSep "\n" (lib.mapAttrsToList (system: packages: ''
+                    cachix push ${cacheName} ${lib.concatStringsSep " " (lib.attrValues packages)}
+                '') pathsToCache)} 
               '';
             };
           };
