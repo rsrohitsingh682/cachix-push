@@ -20,9 +20,9 @@ pog.pog {
       argument = "PREFIX";
     }
     {
-      name = "derivations";
+      name = "name";
       description = "The list of derivations to do whitelisted cachix push and pin";
-      argument = "DERIVATIONS";
+      argument = "NAME";
     }
   ];
   runtimeInputs = [ jq cachix git ];
@@ -30,7 +30,7 @@ pog.pog {
   script = helpers: ''
     blue "Parsing omnix JSON (subflake=$subflake)"
 
-    STORE_PATHS=$(jq -r --arg prefix "$prefix" --arg name "$subflake" --arg derivations "$derivations" -f ${./script.jq})
+    STORE_PATHS=$(jq -r --arg prefix "$prefix" --arg subflake "$subflake" --arg derivations "$name" -f ${./script.jq})
 
     green "Pushing to https://''${cache}.cachix.org"
     echo "$STORE_PATHS" | jq -r --arg cache "$cache" '"cachix push \($cache) \(values | join(" "))"' | sh
