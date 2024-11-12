@@ -10,7 +10,7 @@ def filter_derivations($name; $derivation_list; $prefix; $sys):
         value: $derivation_list[$name]
       }
     else
-        error("Derivation doesn't exists: \($name)")
+        error("No such derivation with name: \($name)")
     end;
 
 # Arguments:
